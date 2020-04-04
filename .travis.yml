@@ -1,0 +1,20 @@
+sudo: required
+services: 
+  - docker
+
+before_install:
+  - docker build -t azimah/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run azimah/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t azimah/multi-client ./client
+  - docker build -t azimah/multi-nginx ./nginx
+  - docker build -t azimah/multi-server ./server
+  - docker build -t azimah/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push azimah/multi-client
+  - docker push azimah/multi-nginx
+  - docker push azimah/multi-server
+  - docker push azimah/multi-worker
