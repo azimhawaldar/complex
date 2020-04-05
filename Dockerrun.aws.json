@@ -1,0 +1,35 @@
+{
+	"AWSEBDockerrunVersion": 2,
+	"containerDefinitions": [{
+			"name": "client",
+			"image": "azimah/multi-client",
+			"hostname": "client",
+			"essential": false
+		},
+		{
+			"name": "server",
+			"image": "azimah/multi-server",
+			"hostname": "api",
+			"essential": false
+		},
+		{
+			"name": "worker",
+			"image": "azimah/multi-worker",
+			"hostname": "worker",
+			"essential": false
+		},
+		{
+			"name": "nginx",
+			"image": "azimah/multi-nginx",
+			"hostname": "nginx",
+			"essential": true,
+			"portMappings": [{
+					"hostPort": 80,
+					"containerPort": 80
+				}
+
+			],
+			"links": ["client", "server"]
+		}
+	]
+}
